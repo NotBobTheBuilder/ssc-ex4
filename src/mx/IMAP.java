@@ -17,6 +17,8 @@ import javax.mail.NoSuchProviderException;
 
 import com.sun.mail.imap.IMAPFolder;
 
+import ex3.utils.Pushable;
+
 public class IMAP {
 
   private final Properties CONFIG;  
@@ -73,30 +75,20 @@ public class IMAP {
     return p;
   }
 
-  public Properties[] getMessages() throws MessagingException {
-    return getMessages("inbox", 20);
+  public void getMessages(Pushable<String> _to) throws MessagingException {
+    getMessages(_to, "inbox", 20);
   }
 
-  public Properties[] getMessages(String _folder, int _count) throws MessagingException {
+  public void getMessages(Pushable<String> _to, String _folder, int _count) throws MessagingException {
     IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
     if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
 
     Message[] messages = folder.getMessages(folder.getMessageCount() - _count, folder.getMessageCount());
     Properties[] msgs = new Properties[messages.length];
-    for (int i = 0; i < messages.length; i++) {
-      if ((i % 10) == 0) {
-        System.out.println("msg "
-                           + Integer.toString(i)
-                           + " of "
-                           + Integer.toString(messages.length)
-                          );
-      }
-      // Sort messages so most recent emails are first
-      msgs[messages.length - 1 - i] = getMessage(messages[i]);
-    }
+    for (int i = messages.length - 1; i > -1; i--)
+      _to.push(getMessage(messages[i]).getProperty("email.subject"));
 
     folder.close(true);
-    return msgs;
   }
 
   /**

@@ -12,7 +12,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JScrollPane;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 
 import javax.swing.event.ListSelectionListener;
 
@@ -27,7 +26,7 @@ public class MainWindow extends JFrame {
   private final JScrollPane   MSG_VIEW    = new JScrollPane();
   private final JSplitPane    SPLIT_PANE  = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                                            MSG_LIST, MSG_VIEW);
-  
+ 
   public MainWindow(Properties _p) {
     super();
     this.setTitle("Email Client");
@@ -55,20 +54,11 @@ public class MainWindow extends JFrame {
     this.pack();
     this.setVisible(true);
  
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        Properties[] messages;
-        try {
-          messages = IMAP.getMessages();
-        } catch (MessagingException e) {
-          messages = new Properties[]{};
-        }
-        for (Properties p : messages)
-          MSG_LIST.push(p.getProperty("sender.name") + ": "
-                        + p.getProperty("email.subject"));
-      }
-    });
+    try {
+      IMAP.getMessages(MSG_LIST);
+    } catch (Exception e) {
 
+    }
   }
 
 }
