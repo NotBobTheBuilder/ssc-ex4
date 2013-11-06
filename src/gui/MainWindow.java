@@ -61,11 +61,7 @@ public class MainWindow extends JFrame
 
     MSG_LIST.addListSelectionListener(this);
  
-    try {
-      IMAP.getMessages(MSG_LIST);
-    } catch (Exception e) {
-
-    }
+    IMAP.getMessages(MSG_LIST);
 
   }
 

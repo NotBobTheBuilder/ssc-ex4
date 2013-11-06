@@ -35,60 +35,81 @@ public class IMAP {
                   CONFIG.getProperty("mail.password"));
   }
 
-  public Properties getMessage(int _msgnum) throws MessagingException {
+  public Properties getMessage(int _msgnum) {
     return getMessage(_msgnum, "inbox");
   }
 
-  public Properties getMessage(int _msgnum, String _folder) throws MessagingException {
-    IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
-    if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
-
-    Properties msg = getMessage(folder.getMessage(_msgnum));
-
-    folder.close(true);
-    return msg;
-  }
-
-  public Properties getMessage(Message _message) throws MessagingException {
-    InternetAddress sender = (InternetAddress) _message.getFrom()[0];
-
-    String name = (sender.getPersonal() != null) ? sender.getPersonal() 
-                                                 : sender.getAddress().split("@")[0];
-
-    String subject = (_message.getSubject() != null) ? _message.getSubject()
-                                                     : "<NO SUBJECT>";
-
-    String content;
+  public Properties getMessage(int _msgnum, String _folder) {
     try {
-      content = getText(_message);
-    } catch (IOException e) {
-      content = "<ERROR READING SUBJECT>";
-    }
+      IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
+      if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
 
-    Properties p = new Properties();
-    p.setProperty("sender.name", name);
-    p.setProperty("sender.email", sender.getAddress());
-    p.setProperty("email.subject", subject);
-    p.setProperty("email.contentType", _message.getContentType());
-    p.setProperty("email.content", content);
-    p.setProperty("email.id", Integer.toString(_message.getMessageNumber()));
-    return p;
+      Properties msg = getMessage(folder.getMessage(_msgnum));
+
+      folder.close(true);
+      return msg;
+    } catch (MessagingException e) {
+      return null;
+    }
   }
 
-  public void getMessages(Pushable<Properties> _to) throws MessagingException {
+  public Properties getMessage(Message _message) {
+    try {
+      InternetAddress sender = (InternetAddress) _message.getFrom()[0];
+
+      String name = (sender.getPersonal() != null) ? sender.getPersonal() 
+                                                   : sender.getAddress().split("@")[0];
+
+      String subject = (_message.getSubject() != null) ? _message.getSubject()
+                                                       : "<NO SUBJECT>";
+
+      String content;
+      try {
+        content = getText(_message);
+      } catch (IOException e) {
+        content = "<ERROR READING SUBJECT>";
+      }
+
+      Properties p = new Properties();
+      p.setProperty("sender.name", name);
+      p.setProperty("sender.email", sender.getAddress());
+      p.setProperty("email.subject", subject);
+      p.setProperty("email.contentType", _message.getContentType());
+      p.setProperty("email.content", content);
+      p.setProperty("email.id", Integer.toString(_message.getMessageNumber()));
+      return p;
+    } catch (MessagingException e) {
+      return null;
+    }
+  }
+
+  public void getMessages(Pushable<Properties> _to) {
     getMessages(_to, "inbox", 20);
   }
 
-  public void getMessages(Pushable<Properties> _to, String _folder, int _count) throws MessagingException {
-    IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
-    if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
+  public void getMessages(Pushable<Properties> _to, String _folder, int _count) {
+    IMAPFolder folder;
+    try {
+      folder = (IMAPFolder) STORE.getFolder(_folder);
+    } catch (MessagingException e) {
+      folder = null;
+    }
+    try {
+      if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
 
-    Message[] messages = folder.getMessages(folder.getMessageCount() - _count, folder.getMessageCount());
-    Properties[] msgs = new Properties[messages.length];
-    for (int i = messages.length - 1; i > -1; i--)
-      _to.push(getMessage(messages[i]));
+      Message[] messages = folder.getMessages(folder.getMessageCount() - _count, folder.getMessageCount());
+      Properties[] msgs = new Properties[messages.length];
+      for (int i = messages.length - 1; i > -1; i--)
+        _to.push(getMessage(messages[i]));
+    } catch (MessagingException e) {
+    
+    } finally {
+      try {
+        if (folder != null) folder.close(true);
+      } catch (MessagingException e) {
 
-    folder.close(true);
+      }
+    }
   }
 
   /**
