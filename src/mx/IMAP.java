@@ -75,18 +75,18 @@ public class IMAP {
     return p;
   }
 
-  public void getMessages(Pushable<String> _to) throws MessagingException {
+  public void getMessages(Pushable<Properties> _to) throws MessagingException {
     getMessages(_to, "inbox", 20);
   }
 
-  public void getMessages(Pushable<String> _to, String _folder, int _count) throws MessagingException {
+  public void getMessages(Pushable<Properties> _to, String _folder, int _count) throws MessagingException {
     IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
     if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
 
     Message[] messages = folder.getMessages(folder.getMessageCount() - _count, folder.getMessageCount());
     Properties[] msgs = new Properties[messages.length];
     for (int i = messages.length - 1; i > -1; i--)
-      _to.push(getMessage(messages[i]).getProperty("email.subject"));
+      _to.push(getMessage(messages[i]));
 
     folder.close(true);
   }
