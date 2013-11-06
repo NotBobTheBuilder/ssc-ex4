@@ -15,6 +15,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import javax.swing.event.ListSelectionListener;
+
 import ex3.utils.Pushable;
 
 public class MessageList  extends JScrollPane 
@@ -49,4 +51,9 @@ public class MessageList  extends JScrollPane
   public void push(Properties _subject) {
     MSG_LIST_MODEL.addElement(_subject);
   }
+
+  public void addListSelectionListener(ListSelectionListener _l) {
+    MSG_LIST.addListSelectionListener(_l);
+  }
+
 }
