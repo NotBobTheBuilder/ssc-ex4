@@ -73,8 +73,8 @@ public class MainWindow extends JFrame
   public void valueChanged(final ListSelectionEvent e) {
     if (e.getValueIsAdjusting()) return;
 
-    DefaultListModel list = (DefaultListModel) ((JList) e.getSource()).getModel();
-    Properties msg = (Properties) list.getElementAt(e.getFirstIndex());
+    JList list = (JList) e.getSource();
+    Properties msg = (Properties) list.getSelectedValue();
 
     MSG_PANE.setContentType("text/html");
     MSG_PANE.setText(msg.getProperty("email.content"));
