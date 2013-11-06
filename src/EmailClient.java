@@ -18,9 +18,11 @@ public class EmailClient {
     File propFile = new File(System.getProperty("user.home")
                              + "/.mailProps.xml");
 
+    //First time account config
     while (!propFile.isFile())
       new MailProperties(propFile);
    
+    //Load config
     Properties props = new Properties();
     try {
       props.loadFromXML(new FileInputStream(propFile));
