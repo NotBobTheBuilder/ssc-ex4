@@ -5,6 +5,7 @@ import java.lang.Runnable;
 import java.util.Properties;
 
 import java.awt.Dimension;
+import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -52,6 +53,8 @@ public class MainWindow extends JFrame
 
     MSG_LIST.setMinimumSize(minimum);
     MSG_VIEW.setMinimumSize(minimum);
+    MSG_PANE.setBackground(Color.white);
+    MSG_PANE.setEditable(false);
 
     SPLIT_PANE.setPreferredSize(new Dimension(800, 500));
 
