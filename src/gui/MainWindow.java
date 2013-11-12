@@ -10,8 +10,6 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
-import javax.swing.JScrollPane;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -28,10 +26,9 @@ public class MainWindow extends JFrame
 
   private final IMAP          IMAP;
   private final MessageList   MSG_LIST    = new MessageList();
-  private final JTextPane     MSG_PANE    = new JTextPane();
-  private final JScrollPane   MSG_VIEW    = new JScrollPane(MSG_PANE);
+  private final MessageView   MSG_PANE    = new MessageView();
   private final JSplitPane    SPLIT_PANE  = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                                           MSG_LIST, MSG_VIEW);
+                                                           MSG_LIST, MSG_PANE);
  
   public MainWindow(Properties _p) {
     super();
@@ -52,9 +49,7 @@ public class MainWindow extends JFrame
     Dimension minimum = new Dimension(300, 500);
 
     MSG_LIST.setMinimumSize(minimum);
-    MSG_VIEW.setMinimumSize(minimum);
-    MSG_PANE.setBackground(Color.white);
-    MSG_PANE.setEditable(false);
+    MSG_PANE.setMinimumSize(minimum);
 
     SPLIT_PANE.setPreferredSize(new Dimension(800, 500));
 
@@ -75,8 +70,7 @@ public class MainWindow extends JFrame
     JList list = (JList) e.getSource();
     Properties msg = (Properties) list.getSelectedValue();
 
-    MSG_PANE.setContentType("text/html");
-    MSG_PANE.setText(msg.getProperty("email.content"));
+    MSG_PANE.setMessage(msg);
   }
 
 }
