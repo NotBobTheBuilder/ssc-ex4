@@ -44,4 +44,8 @@ public class MessageView extends JSplitPane {
     METAPANE.setMessage(_msg);
   }
 
+  public void setAddress(String _address) {
+    METAPANE.setAddress(_address);
+  }
+
 }

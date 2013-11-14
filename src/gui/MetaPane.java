@@ -21,17 +21,19 @@ public class MetaPane extends JPanel {
   private final JLabel        L_SUBJECT = new JLabel("Subject:");
   private final JTextField    SUBJECT   = new JTextField();
   private final SpringLayout  LAYOUT    = new SpringLayout();
+  private final int           MODE;
 
   public MetaPane(int _mode) {
     this.setLayout(LAYOUT);
+    MODE = _mode;
 
-    if (_mode == MetaPane.RECV) {
+    if (MODE == MetaPane.RECV) {
       ADDRESS.setEditable(false);
       CC.setEditable(false);
       SUBJECT.setEditable(false);
     }
     
-    L_ADDRESS.setText((_mode == MetaPane.RECV) ? "Sender:" : "To:");
+    L_ADDRESS.setText((MODE == MetaPane.RECV) ? "Sender:" : "To:");
 
     LAYOUT.putConstraint(SpringLayout.WEST,   ADDRESS,     80,   SpringLayout.WEST,  this);
     LAYOUT.putConstraint(SpringLayout.EAST,   ADDRESS,    -10,   SpringLayout.EAST,  this);
@@ -49,7 +51,7 @@ public class MetaPane extends JPanel {
     this.add(L_CC);
     this.add(CC);
     
-    if (_mode == MetaPane.SENT) {
+    if (MODE == MetaPane.SENT) {
       LAYOUT.putConstraint(SpringLayout.NORTH,  BCC,          5,    SpringLayout.SOUTH, CC);
 
       LAYOUT.putConstraint(SpringLayout.WEST,   BCC,          80,   SpringLayout.WEST,  this);
@@ -83,6 +85,11 @@ public class MetaPane extends JPanel {
 
     ADDRESS.setText(name);
     SUBJECT.setText(_msg.getProperty("email.subject"));
+  }
+
+  public void setAddress(String _address) {
+    if (MODE == MetaPane.SENT)
+      ADDRESS.setText(_address);
   }
 
 }
