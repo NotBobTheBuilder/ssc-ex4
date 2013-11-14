@@ -13,7 +13,7 @@ import javax.swing.JTextPane;
 
 public class MessageView extends JSplitPane {
 
-  private final MetaPane      METAPANE    = new MetaPane(MetaPane.RECV);
+  private final MetaPane      METAPANE;
   private final JTextPane     MSG_PANE    = new JTextPane();
   private final JScrollPane   MSG_VIEW    = new JScrollPane(MSG_PANE);
 
@@ -23,10 +23,13 @@ public class MessageView extends JSplitPane {
 
   public MessageView(boolean _editable) {
     super();
+    
+    METAPANE = new MetaPane((_editable) ? MetaPane.SENT : MetaPane.RECV);
+
     this.setOrientation(JSplitPane.VERTICAL_SPLIT);
     this.setLeftComponent(METAPANE);
     this.setRightComponent(MSG_VIEW);
-    this.setDividerLocation(100);
+    this.setDividerLocation((_editable) ? 130 : 100);
 
     MSG_PANE.setContentType((_editable) ? "text/plain" : "text/html");
     MSG_PANE.setEditable(_editable);
