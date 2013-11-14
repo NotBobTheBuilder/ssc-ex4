@@ -56,8 +56,8 @@ public class MetaPane extends JPanel {
       LAYOUT.putConstraint(SpringLayout.EAST,   BCC,         -10,   SpringLayout.EAST,  this);
       LAYOUT.putConstraint(SpringLayout.EAST,   L_BCC,       -10,   SpringLayout.WEST,  BCC);
       LAYOUT.putConstraint(SpringLayout.NORTH,  L_BCC,        4,    SpringLayout.NORTH, BCC);
-      this.add(L_CC);
-      this.add(CC);
+      this.add(L_BCC);
+      this.add(BCC);
     
       LAYOUT.putConstraint(SpringLayout.NORTH,  SUBJECT,     5,    SpringLayout.SOUTH, BCC);
     } else {
