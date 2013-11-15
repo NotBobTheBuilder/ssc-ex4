@@ -19,6 +19,9 @@ import javax.swing.event.ListSelectionListener;
 
 import ex3.utils.Pushable;
 
+/**
+ * The Class MessageList - A ScrollPane containing a JList
+ */
 public class MessageList  extends JScrollPane 
                           implements Pushable<Properties> {
 
@@ -26,6 +29,9 @@ public class MessageList  extends JScrollPane
   private final JList             MSG_LIST        = new JList(MSG_LIST_MODEL);
   private final JPanel            PANEL_BACKING;
 
+  /**
+   * Instantiates a new message list.
+   */
   public MessageList() {
     super(new JPanel());
     PANEL_BACKING = ((JPanel) this.getViewport().getView());
@@ -48,10 +54,20 @@ public class MessageList  extends JScrollPane
     });
   }
 
+  /**
+   * Push a new message onto the message list
+   *
+   * @param _subject the _subject
+   */
   public void push(Properties _subject) {
     MSG_LIST_MODEL.addElement(_subject);
   }
 
+  /**
+   * Adds a list selection listener to the {@link MSG_LIST} instance
+   *
+   * @param _l the _l
+   */
   public void addListSelectionListener(ListSelectionListener _l) {
     MSG_LIST.addListSelectionListener(_l);
   }

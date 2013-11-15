@@ -29,6 +29,10 @@ import javax.mail.MessagingException;
 
 import ex3.mx.IMAP;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MainWindow.
+ */
 public class MainWindow extends JFrame 
                         implements ActionListener,
                                    ListSelectionListener {
@@ -43,6 +47,11 @@ public class MainWindow extends JFrame
   private final JSplitPane    SPLIT_PANE  = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                                            MSG_LIST, MSG_PANE);
  
+  /**
+   * Instantiates a new main window.
+   *
+   * @param _p a Properties object containing config values
+   */
   public MainWindow(Properties _p) {
     super();
     this.setTitle("Email Client");

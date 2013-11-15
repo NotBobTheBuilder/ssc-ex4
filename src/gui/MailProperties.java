@@ -14,7 +14,8 @@ import javax.swing.SpringLayout;
 
 import java.awt.Container;
 
-/** Configuration dialog for account settings.
+/** 
+ *  Configuration dialog for account settings.
  *  Allows user to set up config once and forget about it.
  *  Stores data in an XML file (specified by {@link EmailClient})
  *
@@ -22,7 +23,10 @@ import java.awt.Container;
  */
 public class MailProperties extends JFrame {
 
-  /** Store config variables for accounts
+  /**
+   * Store config variables for accounts.
+   *
+   * @param _propFile the _prop file
    */
   public MailProperties(File _propFile) {
     Properties _p = new Properties();

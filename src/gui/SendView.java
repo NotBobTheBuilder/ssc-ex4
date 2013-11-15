@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 
 import ex3.mx.SMTP;
 
+/**
+ * SendView - JFrame wrapper for an editable message view
+ */
 public class SendView extends JFrame
                       implements ActionListener {
 
@@ -27,16 +30,28 @@ public class SendView extends JFrame
   private final JMenu         MENU_FILE   = new JMenu("File");
   private final JMenuItem     MENU_F_SEND = new JMenuItem("Send", KeyEvent.VK_S);
 
+  /**
+   * Instantiates a new send view by calling main constructor with empty recipient address.
+   *
+   * @param _config the _config
+   */
   public SendView(Properties _config) {
     this("", _config);
   }
 
+  /**
+   * Instantiates a new send view.
+   *
+   * @param _to the message recipient
+   * @param _config the email client config
+   */
   public SendView(String _to, Properties _config) {
     CONFIG = _config;
     MSGVIEW.setAddress(_to);
     MSGVIEW.setPreferredSize(new Dimension(500, 400));
 
     MENU_F_SEND.addActionListener(this);
+    //CTRL+S is a shortcut key for sending
     MENU_F_SEND.setAccelerator(KeyStroke.getKeyStroke(
       KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
@@ -57,6 +72,7 @@ public class SendView extends JFrame
 
   @Override
   public void actionPerformed(ActionEvent e) {
+	  // Send the message in a new thread
       new Runnable() {
         public void run() {
           try {

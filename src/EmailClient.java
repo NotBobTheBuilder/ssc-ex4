@@ -12,8 +12,16 @@ import javax.swing.UIManager;
 import ex3.gui.MainWindow;
 import ex3.gui.MailProperties;
 
+/**
+ * EmailClient.
+ */
 public class EmailClient {
 
+  /**
+   * Instantiates a new email client.
+   * Checks user's preferences before starting a new window
+   * @param args the args
+   */
   public EmailClient(String[] args) {
     File propFile = new File(System.getProperty("user.home")
                              + "/.mailProps.xml");
@@ -34,6 +42,11 @@ public class EmailClient {
     new MainWindow(props);
   }
 
+  /**
+   * The main method - set look and feel before starting new object
+   *
+   * @param args the arguments
+   */
   public static void main(String[] args) {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

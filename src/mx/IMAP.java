@@ -19,12 +19,22 @@ import com.sun.mail.imap.IMAPFolder;
 
 import ex3.utils.Pushable;
 
+/**
+ * Wrapper for IMAP operations
+ */
 public class IMAP {
 
   private final Properties CONFIG;  
   private final Session SESSION;
   private final Store STORE;
 
+  /**
+   * Instantiates a new IMAP session.
+   *
+   * @param _p the _p
+   * @throws NoSuchProviderException the no such provider exception
+   * @throws MessagingException the messaging exception
+   */
   public IMAP(Properties _p) throws NoSuchProviderException, MessagingException {
     CONFIG = _p;
     SESSION = Session.getDefaultInstance(_p);
@@ -35,10 +45,23 @@ public class IMAP {
                   CONFIG.getProperty("mail.password"));
   }
 
+  /**
+   * Gets the message specified by _msgnum
+   *
+   * @param _msgnum the number of the message to fetch
+   * @return the message (Properties repr)
+   */
   public Properties getMessage(int _msgnum) {
     return getMessage(_msgnum, "inbox");
   }
 
+  /**
+   * Gets the message.
+   *
+   * @param _msgnum the _msgnum
+   * @param _folder the _folder
+   * @return the message
+   */
   public Properties getMessage(int _msgnum, String _folder) {
     try {
       IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
@@ -53,6 +76,12 @@ public class IMAP {
     }
   }
 
+  /**
+   * Get a Properties representation of a message from a Message object.
+   *
+   * @param _message the _message
+   * @return the message
+   */
   public Properties getMessage(Message _message) {
     try {
       InternetAddress sender = (InternetAddress) _message.getFrom()[0];
@@ -83,10 +112,23 @@ public class IMAP {
     }
   }
 
+  /**
+   * Gets 20 messages and pushes them asynchronously onto a pushable object.
+   *
+   * @param _to the _to
+   * @return the messages
+   */
   public void getMessages(Pushable<Properties> _to) {
     getMessages(_to, "inbox", 20);
   }
 
+  /**
+   * Fetches messages and pushes them asynchronously onto a pushable object.
+   *
+   * @param _to where to push the messages
+   * @param _folder which IMAP folder to get messages from
+   * @param _count the number of messages to fetch
+   */
   public void getMessages(Pushable<Properties> _to, String _folder, int _count) {
     IMAPFolder folder;
     try {
@@ -115,6 +157,11 @@ public class IMAP {
   /**
    * This taken from JavaMail FAQs
    * http://www.oracle.com/technetwork/java/javamail/faq/index.html#mainbody
+   *
+   * @param p a message part
+   * @return the text contained within the message
+   * @throws MessagingException the messaging exception
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   private String getText(Part p) throws
               MessagingException, IOException {
@@ -156,6 +203,9 @@ public class IMAP {
     return null;
   }
 
+  /**
+   * Close.
+   */
   public void close() {
     try {
       if (STORE != null) STORE.close();

@@ -7,11 +7,13 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+/**
+ * MetaPane - container for sender, recipient, subject & cc information
+ */
 public class MetaPane extends JPanel {
 
   public static final int   SENT = 1;
   public static final int   RECV = 2;
-
   private final JLabel        L_ADDRESS = new JLabel();
   private final JTextField    ADDRESS   = new JTextField();
   private final JLabel        L_CC      = new JLabel("CC:");
@@ -23,6 +25,11 @@ public class MetaPane extends JPanel {
   private final SpringLayout  LAYOUT    = new SpringLayout();
   private final int           MODE;
 
+  /**
+   * Instantiates a new meta pane.
+   *
+   * @param _mode the _mode
+   */
   public MetaPane(int _mode) {
     this.setLayout(LAYOUT);
     MODE = _mode;
@@ -74,6 +81,11 @@ public class MetaPane extends JPanel {
     this.add(SUBJECT);
   }
 
+  /**
+   * Sets the message.
+   *
+   * @param _msg the new message
+   */
   public void setMessage(Properties _msg) {
     String name = _msg.getProperty("sender.name", "");
 
@@ -87,23 +99,48 @@ public class MetaPane extends JPanel {
     SUBJECT.setText(_msg.getProperty("email.subject"));
   }
 
+  /**
+   * Sets the address.
+   *
+   * @param _address the new address
+   */
   public void setAddress(String _address) {
     if (MODE == MetaPane.SENT)
       ADDRESS.setText(_address);
   }
 
+  /**
+   * Gets the address.
+   *
+   * @return the address
+   */
   public String getAddress() {
     return ADDRESS.getText();
   }
 
+  /**
+   * Gets the cc.
+   *
+   * @return the cc
+   */
   public String getCC() {
     return CC.getText();
   }
 
+  /**
+   * Gets the bcc.
+   *
+   * @return the bcc
+   */
   public String getBCC() {
     return BCC.getText();
   }
 
+  /**
+   * Gets the subject.
+   *
+   * @return the subject
+   */
   public String getSubject() {
     return SUBJECT.getText();
   }
