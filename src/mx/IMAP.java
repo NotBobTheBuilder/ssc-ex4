@@ -30,7 +30,7 @@ public class IMAP {
     SESSION = Session.getDefaultInstance(_p);
     STORE = SESSION.getStore(_p.getProperty("mail.store.protocol"));
 
-    STORE.connect(CONFIG.getProperty("mail.host"), 
+    STORE.connect(CONFIG.getProperty("mail.imap.host"), 
                   CONFIG.getProperty("mail.user"),
                   CONFIG.getProperty("mail.password"));
   }

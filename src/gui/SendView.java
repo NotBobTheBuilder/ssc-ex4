@@ -1,25 +1,72 @@
 package ex3.gui;
 
+import java.util.Properties;
+
 import java.awt.Dimension;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
-public class SendView extends JFrame {
+import ex3.mx.SMTP;
 
-  public SendView() {
-    this("");
+public class SendView extends JFrame
+                      implements ActionListener {
+
+  private final Properties    CONFIG;
+  private final MessageView   MSGVIEW     = new MessageView(true);
+  private final JMenuBar      MENU        = new JMenuBar();
+  private final JMenu         MENU_FILE   = new JMenu("File");
+  private final JMenuItem     MENU_F_SEND = new JMenuItem("Send", KeyEvent.VK_S);
+
+  public SendView(Properties _config) {
+    this("", _config);
   }
 
-  public SendView(String _to) {
-    MessageView m  = new MessageView(true);
+  public SendView(String _to, Properties _config) {
+    CONFIG = _config;
+    MSGVIEW.setAddress(_to);
+    MSGVIEW.setPreferredSize(new Dimension(500, 400));
 
-    m.setAddress(_to);
-    m.setPreferredSize(new Dimension(500, 400));
+    MENU_F_SEND.addActionListener(this);
+    MENU_F_SEND.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
+    MENU_FILE.add(MENU_F_SEND);
+    MENU.add(MENU_FILE);
+
+    this.setJMenuBar(MENU);
     this.setTitle("New Message");
-    this.getContentPane().add(m);
+    this.getContentPane().add(MSGVIEW);
     this.pack();
     this.setVisible(true);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+      new Runnable() {
+        public void run() {
+          try {
+            new SMTP(CONFIG).send(
+              MSGVIEW.getAddress(),
+              MSGVIEW.getCC(),
+              MSGVIEW.getBCC(),
+              MSGVIEW.getSubject(),
+              MSGVIEW.getFile(),
+              MSGVIEW.getMessage()
+            );
+          } catch (Exception _) {
+            System.out.println("Error Sending Message");
+            System.out.println(_);
+          }
+        }
+      }.run();
   }
 
 }

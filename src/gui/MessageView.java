@@ -48,4 +48,29 @@ public class MessageView extends JSplitPane {
     METAPANE.setAddress(_address);
   }
 
+  public String getAddress() {
+    return METAPANE.getAddress();
+  }
+
+  public String getCC() {
+    return METAPANE.getCC();
+  }
+
+  public String getBCC() {
+    return METAPANE.getBCC();
+  }
+
+  public String getSubject() {
+    return METAPANE.getSubject();
+  }
+
+  public String getFile() {
+    return "";
+  }
+
+  public String getMessage() {
+    return MSG_PANE.getText();
+  }
+
+
 }

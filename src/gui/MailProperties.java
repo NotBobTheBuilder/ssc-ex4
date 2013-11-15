@@ -29,7 +29,14 @@ public class MailProperties extends JFrame {
     _p.setProperty("mail.user", "username");
     _p.setProperty("mail.password", "password");
     _p.setProperty("mail.store.protocol", "imaps");
-    _p.setProperty("mail.host", "mail.bham.ac.uk");
+    _p.setProperty("mail.imap.host", "mail.bham.ac.uk");
+    _p.setProperty("mail.smtp.host", "auth-smtp.bham.ac.uk");
+    _p.setProperty("mail.smtp.auth", "true");
+    _p.setProperty("mail.smtp.port", "465");
+    _p.setProperty("mail.smtp.socketFactory.port", "465");
+    _p.setProperty("mail.smtp.socketFactory.class",
+                   "javax.net.ssl.SSLSocketFactory");
+    _p.setProperty("mail.address", "uob-email");
 
     try {
       if (!(_propFile.isFile()))

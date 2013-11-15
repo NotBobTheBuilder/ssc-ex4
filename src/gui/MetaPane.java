@@ -92,4 +92,20 @@ public class MetaPane extends JPanel {
       ADDRESS.setText(_address);
   }
 
+  public String getAddress() {
+    return ADDRESS.getText();
+  }
+
+  public String getCC() {
+    return CC.getText();
+  }
+
+  public String getBCC() {
+    return BCC.getText();
+  }
+
+  public String getSubject() {
+    return SUBJECT.getText();
+  }
+
 }

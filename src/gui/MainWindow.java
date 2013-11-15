@@ -33,6 +33,7 @@ public class MainWindow extends JFrame
                         implements ActionListener,
                                    ListSelectionListener {
 
+  private final Properties    CONFIG;
   private final IMAP          IMAP;
   private final JMenuBar      MENU        = new JMenuBar();
   private final JMenu         MENU_FILE   = new JMenu("File");
@@ -46,6 +47,8 @@ public class MainWindow extends JFrame
     super();
     this.setTitle("Email Client");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    CONFIG = _p;
 
     IMAP i;
     try {
@@ -94,7 +97,7 @@ public class MainWindow extends JFrame
 
   @Override
   public void actionPerformed(final ActionEvent e) {
-    new SendView();
+    new SendView(CONFIG);
   }
 
 }
