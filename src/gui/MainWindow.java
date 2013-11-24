@@ -29,7 +29,6 @@ import javax.mail.MessagingException;
 
 import ex3.mx.IMAP;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MainWindow.
  */

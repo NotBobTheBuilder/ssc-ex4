@@ -72,7 +72,6 @@ public class SMTP {
     TRANSPORT.connect(CONFIG.getProperty("mail.host"),
                       CONFIG.getProperty("mail.user"),
                       CONFIG.getProperty("mail.password"));
-    System.out.println("here");
     TRANSPORT.sendMessage(_m, _m.getAllRecipients());
   }
 }
