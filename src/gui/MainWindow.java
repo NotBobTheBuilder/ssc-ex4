@@ -91,6 +91,7 @@ public class MainWindow extends JFrame
     MSG_LIST.addListSelectionListener(this);
  
     IMAP.getMessages(MSG_LIST);
+    IMAP.addMessageCountListener(MSG_LIST);
   }
 
   @Override

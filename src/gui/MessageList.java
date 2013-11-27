@@ -57,10 +57,21 @@ public class MessageList  extends JScrollPane
   /**
    * Push a new message onto the message list
    *
-   * @param _subject the _subject
+   * @param _message the message
    */
-  public void push(Properties _subject) {
-    MSG_LIST_MODEL.addElement(_subject);
+  public void push(Properties _message) {
+    MSG_LIST_MODEL.addElement(_message);
+  }
+
+  /**
+   * Put a new message on the message list, at a specified position
+   *
+   * @param _message the message
+   * @param _index the position to put it at (0 is top)
+   */
+  public void put(Properties _message, int _index) {
+    MSG_LIST_MODEL.add(_index, _message);
+    MSG_LIST.setSelectedIndex(_index);
   }
 
   /**

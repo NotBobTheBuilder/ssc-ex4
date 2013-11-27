@@ -3,6 +3,7 @@ package ex3.mx;
 import java.util.Properties;
 
 import java.io.IOException;
+import java.io.Closeable;
 
 import javax.mail.Session;
 import javax.mail.Store;
@@ -15,6 +16,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 
+import javax.mail.event.MessageCountListener;
+import javax.mail.event.MessageCountEvent;
+
 import com.sun.mail.imap.IMAPFolder;
 
 import ex3.utils.Pushable;
@@ -22,11 +26,14 @@ import ex3.utils.Pushable;
 /**
  * Wrapper for IMAP operations
  */
-public class IMAP {
+public class IMAP implements  Closeable {
 
-  private final Properties CONFIG;  
-  private final Session SESSION;
-  private final Store STORE;
+  private final Properties  CONFIG;  
+  private final Session     SESSION;
+  private final Store       STORE;
+  private final Folder      FOLDER;
+
+  private boolean   pollThreadStarted = false;
 
   /**
    * Instantiates a new IMAP session.
@@ -43,6 +50,10 @@ public class IMAP {
     STORE.connect(CONFIG.getProperty("mail.imap.host"), 
                   CONFIG.getProperty("mail.user"),
                   CONFIG.getProperty("mail.password"));
+
+    FOLDER = (IMAPFolder) STORE.getFolder("INBOX");
+    if (!FOLDER.isOpen()) FOLDER.open(Folder.READ_WRITE);
+
   }
 
   /**
@@ -64,12 +75,7 @@ public class IMAP {
    */
   public Properties getMessage(int _msgnum, String _folder) {
     try {
-      IMAPFolder folder = (IMAPFolder) STORE.getFolder(_folder);
-      if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
-
-      Properties msg = getMessage(folder.getMessage(_msgnum));
-
-      folder.close(true);
+      Properties msg = getMessage(FOLDER.getMessage(_msgnum));
       return msg;
     } catch (MessagingException e) {
       return null;
@@ -130,27 +136,13 @@ public class IMAP {
    * @param _count the number of messages to fetch
    */
   public void getMessages(Pushable<Properties> _to, String _folder, int _count) {
-    IMAPFolder folder;
     try {
-      folder = (IMAPFolder) STORE.getFolder(_folder);
-    } catch (MessagingException e) {
-      folder = null;
-    }
-    try {
-      if (!folder.isOpen()) folder.open(Folder.READ_WRITE);
-
-      Message[] messages = folder.getMessages(folder.getMessageCount() - _count, folder.getMessageCount());
+      Message[] messages = FOLDER.getMessages(FOLDER.getMessageCount() - _count, FOLDER.getMessageCount());
       Properties[] msgs = new Properties[messages.length];
       for (int i = messages.length - 1; i > -1; i--)
         _to.push(getMessage(messages[i]));
     } catch (MessagingException e) {
     
-    } finally {
-      try {
-        if (folder != null) folder.close(true);
-      } catch (MessagingException e) {
-
-      }
     }
   }
 
@@ -208,9 +200,45 @@ public class IMAP {
    */
   public void close() {
     try {
+      if (FOLDER != null) FOLDER.close(false);
       if (STORE != null) STORE.close();
     } catch (Exception e) {
       // Don't worry, be happy
     }
   }
+
+  private class PollThread implements Runnable {
+    public void run() {
+      while (FOLDER.isOpen()) {
+        try {
+          Thread.sleep(5000);
+          FOLDER.getMessageCount();
+        } catch (MessagingException e) {
+
+        } catch (InterruptedException e) {
+
+        }
+      }
+    }
+  }
+
+  public void addMessageCountListener(final Pushable<Properties> _push) {
+    if (!pollThreadStarted) {
+      pollThreadStarted = true;
+      new Thread(new PollThread()).start();
+    }
+
+    FOLDER.addMessageCountListener(new MessageCountListener() {
+
+      public void messagesAdded(MessageCountEvent e) {
+        _push.put(getMessage(e.getMessages()[0]), 0);
+      }
+
+      public void messagesRemoved(MessageCountEvent e) {
+
+      }
+      
+    });
+  }
+
 }
