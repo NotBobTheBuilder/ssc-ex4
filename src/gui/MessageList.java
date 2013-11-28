@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListCellRenderer;
@@ -70,6 +71,8 @@ public class MessageList  extends JScrollPane
    * @param _index the position to put it at (0 is top)
    */
   public void put(Properties _message, int _index) {
+    JOptionPane.showMessageDialog(this, "New message from"
+                                        + _message.getProperty("email.sender"));
     MSG_LIST_MODEL.add(_index, _message);
     MSG_LIST.setSelectedIndex(_index);
   }
